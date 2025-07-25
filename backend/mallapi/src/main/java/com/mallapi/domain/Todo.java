@@ -3,6 +3,7 @@ package com.mallapi.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity @ToString
@@ -23,7 +24,7 @@ public class Todo {
 
     private boolean complete;
 
-    private LocalDateTime dueDate;
+    private LocalDate dueDate;
 
 
     public void changeTitle(String title) {
@@ -38,7 +39,7 @@ public class Todo {
         this.complete = complete;
     }
 
-    public void changeDueDate(LocalDateTime dueDate) {
+    public void changeDueDate(LocalDate dueDate) {
         this.dueDate = dueDate;
     }
 }

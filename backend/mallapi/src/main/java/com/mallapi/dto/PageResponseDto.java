@@ -1,6 +1,7 @@
 package com.mallapi.dto;
 
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class PageResponseDto<E> {
 
     private int totalCount, prevPage, nextPage, totalPage, current;
 
+    @Builder(builderMethodName = "withAll")
     public PageResponseDto(List<E> dtoList, PageRequestDto pageRequestDto, long total) {
         this.dtoList = dtoList;
         this.pageRequestDto = pageRequestDto;

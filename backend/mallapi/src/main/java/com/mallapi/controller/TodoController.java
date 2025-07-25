@@ -1,0 +1,45 @@
+package com.mallapi.controller;
+
+
+import com.mallapi.domain.Todo;
+import com.mallapi.dto.PageRequestDto;
+import com.mallapi.dto.PageResponseDto;
+import com.mallapi.dto.TodoDto;
+import com.mallapi.service.TodoService;
+import com.mallapi.service.TodoServiceImpl;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+
+@RestController
+@Log4j2
+@RequiredArgsConstructor
+@RequestMapping("/api/todo")
+public class TodoController {
+
+    private final TodoService todoService;
+
+    @GetMapping("/{tno}")
+    public TodoDto get(@PathVariable("tno") Long tno){
+
+        return todoService.get(tno);
+    }
+
+    @GetMapping("/list")
+    public PageResponseDto<TodoDto> list(PageRequestDto pageRequestDto){
+        log.info("list.............." + pageRequestDto);
+
+        return todoService.getList(pageRequestDto);
+    }
+
+    @PostMapping("/")
+    public Map<String, Long> register(@RequestBody TodoDto dto){
+        log.info("todoDto: " + dto);
+
+        Long tno = todoService.register(dto);
+
+        return Map.of("tno", tno);
+    }
+}

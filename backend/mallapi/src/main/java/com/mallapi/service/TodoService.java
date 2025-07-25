@@ -2,6 +2,8 @@ package com.mallapi.service;
 
 
 import com.mallapi.domain.Todo;
+import com.mallapi.dto.PageRequestDto;
+import com.mallapi.dto.PageResponseDto;
 import com.mallapi.dto.TodoDto;
 import jakarta.transaction.Transactional;
 
@@ -16,6 +18,8 @@ public interface TodoService {
     void modify(TodoDto dto);
 
     void remove(Long tno);
+
+    PageResponseDto<TodoDto> getList(PageRequestDto pageRequestDto);
 
     default TodoDto entityToDto(Todo todo){
 

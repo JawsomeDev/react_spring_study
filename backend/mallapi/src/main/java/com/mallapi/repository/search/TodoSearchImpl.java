@@ -2,14 +2,14 @@ package com.mallapi.repository.search;
 
 import com.mallapi.domain.QTodo;
 import com.mallapi.domain.Todo;
+import com.mallapi.dto.PageRequestDto;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQuery;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
+
+import java.util.List;
 
 @Log4j2
 public class TodoSearchImpl extends QuerydslRepositorySupport implements TodoSearch{
@@ -19,23 +19,24 @@ public class TodoSearchImpl extends QuerydslRepositorySupport implements TodoSea
     }
 
     @Override
-    public Page<Todo> search1() {
+    public Page<Todo> search1(PageRequestDto pageRequestDto) {
 
         log.info("search1..................");
         QTodo todo = QTodo.todo;
 
         JPQLQuery<Todo> query = from(todo);
 
-        query.where(todo.title.contains("1"));
-
-        Pageable pageable = PageRequest.of(1, 10, Sort.by("tno").descending());
+        Pageable pageable = PageRequest.of(
+                pageRequestDto.getPage() -1,
+                pageRequestDto.getSize(),
+                Sort.by("tno").descending());
 
         this.getQuerydsl().applyPagination(pageable, query);
 
-        query.fetch(); // 목록 데이터
+        List<Todo> list = query.fetch();// 목록 데이터
 
-        query.fetchCount();
+        long total = query.fetchCount();
 
-        return null;
+        return new PageImpl<>(list, pageable, total);
     }
 }
