@@ -36,8 +36,8 @@ class TodoRepositoryTest {
         for (int i = 0; i < 100; i++) {
             Todo todo = Todo.builder()
                     .title("title" + i)
-                    .content("content" + i)
-                    .dueDate(LocalDate.of(2025, 12, 30).atStartOfDay())
+                    .writer("writer" + i)
+                    .dueDate(LocalDate.of(2025, 12, 30))
                     .build();
             Todo result = todoRepository.save(todo);
             Assertions.assertNotNull(result);

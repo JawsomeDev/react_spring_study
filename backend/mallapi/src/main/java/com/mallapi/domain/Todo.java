@@ -20,7 +20,7 @@ public class Todo {
     @Column(length = 500, nullable = false)
     private String title;
 
-    private String content;
+    private String writer;
 
     private boolean complete;
 
@@ -31,15 +31,15 @@ public class Todo {
         this.title = title;
     }
 
-    public void changeContent(String content) {
-        this.content = content;
-    }
-
     public void changeComplete(boolean complete) {
         this.complete = complete;
     }
 
     public void changeDueDate(LocalDate dueDate) {
         this.dueDate = dueDate;
+    }
+
+    public void changeWriter(String writer) {
+        this.writer = writer;
     }
 }

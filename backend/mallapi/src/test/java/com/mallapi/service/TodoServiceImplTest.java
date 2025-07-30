@@ -31,8 +31,8 @@ class TodoServiceImplTest {
 
         TodoDto todoDto = TodoDto.builder()
                 .title("Title.....")
-                .content("Content.....")
-                .dueDate(LocalDate.of(2023,12,31).atStartOfDay())
+                .writer("Writer.....")
+                .dueDate(LocalDate.of(2023,12,31))
                 .build();
 
         log.info(todoService.register(todoDto));
