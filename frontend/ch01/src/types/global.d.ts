@@ -29,3 +29,9 @@ interface UseCustomMoveReturn {
     size: number
     refresh: boolean
 }
+
+interface ResultModal {
+    title: string,
+    content: string,
+    callbackFn? : () => void
+}
