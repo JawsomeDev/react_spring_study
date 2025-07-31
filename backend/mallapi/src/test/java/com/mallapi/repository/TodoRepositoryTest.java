@@ -68,7 +68,7 @@ class TodoRepositoryTest {
 
         todo.changeTitle("Update Title");
         todo.changeComplete(true);
-        todo.changeContent("Update content");
+        todo.changeWriter("Update content");
 
         todoRepository.save(todo);
     }
