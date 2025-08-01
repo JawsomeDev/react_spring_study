@@ -9,4 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 public interface ProductService {
 
     PageResponseDto<ProductDto> getList(PageRequestDto pageRequestDto);
+
+    Long register(ProductDto productDto);
+
+    ProductDto get(Long pno);
+
+    void modify(ProductDto productDto);
 }

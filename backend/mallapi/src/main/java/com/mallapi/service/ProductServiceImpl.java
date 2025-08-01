@@ -14,7 +14,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -57,5 +59,92 @@ public class ProductServiceImpl implements ProductService {
                 .total(totalCount)
                 .pageRequestDto(pageRequestDto)
                 .build();
+    }
+
+    @Override
+    public Long register(ProductDto productDto) {
+        Product product = dtoToEntity(productDto);
+
+        log.info("-----------------");
+        log.info(product);
+        log.info(product.getImageList());
+
+        return productRepository.save(product).getPno();
+    }
+
+    @Override
+    public ProductDto get(Long pno) {
+        Optional<Product> result = productRepository.findById(pno);
+
+        Product product = result.orElseThrow();
+
+        return entityToDto(product);
+    }
+
+    @Override
+    public void modify(ProductDto productDto) {
+        // 조회
+        Optional<Product> result = productRepository.findById(productDto.getPno());
+
+        // 변경 내용 반영
+        Product product = result.orElseThrow();
+        product.changePrice(productDto.getPrice());
+        product.changeName(productDto.getPname());
+        product.changeDesc(productDto.getPdesc());
+        product.changeDel(productDto.isDelFlag());
+
+        // 이미지 처리
+        List<String> uploadedFileNames = productDto.getUploadedFileNames();
+
+        product.clearList();
+
+        if(uploadedFileNames != null && !uploadedFileNames.isEmpty()) {
+            uploadedFileNames.forEach(product::addImageString);
+        }
+
+        // 저장
+        productRepository.save(product);
+    }
+
+    private ProductDto entityToDto(Product product) {
+        ProductDto productDto = ProductDto.builder()
+                .pno(product.getPno())
+                .pname(product.getPname())
+                .pdesc(product.getPdesc())
+                .price(product.getPrice())
+                .delFlag(product.isDelFlag())
+                .build();
+        
+        List<ProductImage> imageList = product.getImageList();
+        
+        if(imageList == null || imageList.isEmpty()){
+            return productDto;
+        }
+
+        List<String> fileNameList = imageList.stream().map(ProductImage::getFileName).toList();
+
+        productDto.setUploadedFileNames(fileNameList);
+
+        return productDto;
+    }
+
+    private Product dtoToEntity(ProductDto productDto) {
+        Product product = Product.builder()
+                .pno(productDto.getPno())
+                .pname(productDto.getPname())
+                .pdesc(productDto.getPdesc())
+                .price(productDto.getPrice())
+                .delFlag(productDto.isDelFlag())
+                .build();
+
+        List<String> uploadedFileNames = productDto.getUploadedFileNames();
+        if(uploadedFileNames == null || uploadedFileNames.isEmpty()) {
+            return product;
+        }
+        uploadedFileNames.forEach(fileName -> {
+            product.addImageString(fileName);
+        });
+
+        return product;
     }
 }

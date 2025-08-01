@@ -1,7 +1,11 @@
 package com.mallapi.controller;
 
 
+import com.mallapi.domain.Product;
+import com.mallapi.dto.PageRequestDto;
+import com.mallapi.dto.PageResponseDto;
 import com.mallapi.dto.ProductDto;
+import com.mallapi.service.ProductService;
 import com.mallapi.util.CustomFileUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -21,11 +25,20 @@ import java.util.Map;
 public class ProductController {
 
     private final CustomFileUtil fileUtil;
+    private final ProductService productService;
+
+    @GetMapping("/view/{fileName}")
+    public ResponseEntity<Resource> viewFileGet(@PathVariable("fileName") String fileName){
+        return fileUtil.getFile(fileName);
+    }
+
+    @GetMapping("/list")
+    public PageResponseDto<ProductDto> list(PageRequestDto pageRequestDto){
+        return productService.getList(pageRequestDto);
+    }
 
     @PostMapping("/")
-    public Map<String, String> register(ProductDto productDto){
-
-        log.info("register: " + productDto);
+    public Map<String, Long> register(ProductDto productDto){
 
         List<MultipartFile> files = productDto.getFiles();
 
@@ -35,14 +48,45 @@ public class ProductController {
 
         log.info(uploadedFileNames);
 
+        Long pno = productService.register(productDto);
+
+        return Map.of("RESULT", pno);
+    }
+
+    @GetMapping("/{pno}")
+    public ProductDto read(@PathVariable("pno") Long pno){
+        return productService.get(pno);
+    }
+
+    @PutMapping("/{pno}")
+    public Map<String, String> modify(@PathVariable("pno") Long pno, ProductDto productDto){
+
+        productDto.setPno(pno);
+        ProductDto oldProduct = productService.get(pno);
+
+        // file upload
+        List<MultipartFile> files = productDto.getFiles();
+        List<String> currentUploadFileNames = fileUtil.saveFiles(files);
+
+        // keep files
+        List<String> uploadedFileNames = productDto.getUploadedFileNames();
+
+        if(currentUploadFileNames != null && !currentUploadFileNames.isEmpty()){
+            uploadedFileNames.addAll(currentUploadFileNames);
+        }
+        productService.modify(productDto);
+
+        List<String> oldFileNames = oldProduct.getUploadedFileNames();
+        if(oldFileNames != null && !oldFileNames.isEmpty()){
+            List<String> removeFiles = oldFileNames.stream()
+                    .filter(fileName -> !uploadedFileNames.contains(fileName)).toList();
+
+            fileUtil.deleteFiles(removeFiles);
+        }
+
         return Map.of("RESULT", "SUCCESS");
     }
-
-    @GetMapping("/view/{fileName}")
-    public ResponseEntity<Resource> viewFileGet(@PathVariable("fileName") String fileName){
-        return fileUtil.getFile(fileName);
-    }
-
 }
+
 
 
