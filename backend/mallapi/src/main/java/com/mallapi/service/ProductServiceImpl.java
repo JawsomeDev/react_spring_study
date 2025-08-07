@@ -47,6 +47,8 @@ public class ProductServiceImpl implements ProductService {
                     .pdesc(product.getPdesc())
                     .price(product.getPrice())
                     .build();
+
+
             String imageStr = productImage.getFileName();
             productDto.setUploadedFileNames(List.of(imageStr));
             return productDto;
