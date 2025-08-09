@@ -2,6 +2,7 @@ package com.mallapi.security.handler;
 
 import com.google.gson.Gson;
 import com.mallapi.dto.MemberDto;
+import com.mallapi.util.JWTUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -23,8 +24,11 @@ public class APILoginSuccessHandler implements AuthenticationSuccessHandler {
         MemberDto memberDto = (MemberDto) authentication.getPrincipal();
         Map<String, Object> claims = memberDto.getClaims();
 
-        claims.put("accessToken", "");
-        claims.put("refreshToken", "");
+        String accessToken = JWTUtil.generateToken(claims, 10);
+        String refreshToken = JWTUtil.generateToken(claims, 60*24);
+
+        claims.put("accessToken", accessToken);
+        claims.put("refreshToken", refreshToken);
 
         Gson gson = new Gson();
         String jsonStr = gson.toJson(claims);
