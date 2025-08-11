@@ -40,7 +40,7 @@ function ModifyComponent({product}: {product:ProductDto}) {
     
     const [state, action, isPending] = useActionState(modifyDeleteAsyncAction, initState)
 
-    const {moveToList, moveToRead} = useCustomMove()
+    const {moveToList, moveToRead} = useCustomMove() 
 
     const [images, setImages] = useState<string[]>(product.uploadedFileNames)
 
