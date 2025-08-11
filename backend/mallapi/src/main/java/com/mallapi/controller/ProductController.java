@@ -1,7 +1,5 @@
 package com.mallapi.controller;
 
-
-import com.mallapi.domain.Product;
 import com.mallapi.dto.PageRequestDto;
 import com.mallapi.dto.PageResponseDto;
 import com.mallapi.dto.ProductDto;
@@ -14,8 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
