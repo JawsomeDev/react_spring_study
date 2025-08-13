@@ -1,7 +1,9 @@
 import { useDispatch, useSelector } from "react-redux"
 import { type AppDispatch, type RootState } from "../store"
 import { Navigate, useNavigate } from "react-router"
-import { loginPostAysnc, logout } from "../slices/loginSlice"
+import { loginPostAysnc, logout, save } from "../slices/loginSlice"
+import { useEffect } from "react"
+import { getCookie } from "../util/cookieUtil"
 
 
 const useCustomLogin = () => {
@@ -13,6 +15,15 @@ const useCustomLogin = () => {
 
     // 로그인 여부
     const loginStatus = loginState.status
+
+    useEffect(() => {
+        if(!loginStatus){
+            const cookieData = getCookie("member")
+            if(cookieData){
+                dispatch(save(cookieData))
+            }
+        }
+    },[])
 
     const navigate = useNavigate()
 
