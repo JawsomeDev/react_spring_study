@@ -1,11 +1,13 @@
 package com.mallapi.repository.search;
 
 import com.mallapi.domain.Product;
+
 import com.mallapi.domain.QProduct;
 import com.mallapi.domain.QProductImage;
 import com.mallapi.dto.PageRequestDto;
 import com.mallapi.dto.PageResponseDto;
 import com.mallapi.dto.ProductDto;
+
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.JPQLQuery;
 import lombok.extern.log4j.Log4j2;

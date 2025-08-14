@@ -11,35 +11,37 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
-
-@RequiredArgsConstructor
 @Service
 @Log4j2
-public class CustomUserDetailsService implements UserDetailsService {
+@RequiredArgsConstructor
+public class CustomUserDetailsService implements UserDetailsService{
 
     private final MemberRepository memberRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        log.info("-----------loadUserByUsername------------");
+        log.info("----------------loadUserByUsername-----------------------------");
 
         Member member = memberRepository.getWithRoles(username);
 
-        if(member == null) {
+        if(member == null){
             throw new UsernameNotFoundException("Not Found");
         }
 
-        MemberDto memberDto = new MemberDto(
+        MemberDto memberDTO = new MemberDto(
                 member.getEmail(),
                 member.getPw(),
                 member.getNickname(),
                 member.isSocial(),
                 member.getMemberRoleList()
                         .stream()
-                        .map(Enum::name).collect(Collectors.toList()));
+                        .map(memberRole -> memberRole.name()).collect(Collectors.toList()));
 
-        log.info(" ------------------------------------------ " +memberDto);
-        return memberDto;
+        log.info(memberDTO);
+
+        return memberDTO;
+
     }
+
 }

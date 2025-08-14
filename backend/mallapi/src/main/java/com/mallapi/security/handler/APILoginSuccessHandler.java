@@ -17,26 +17,39 @@ import java.util.Objects;
 
 
 @Log4j2
-public class APILoginSuccessHandler implements AuthenticationSuccessHandler {
+public class APILoginSuccessHandler implements AuthenticationSuccessHandler{
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        MemberDto memberDto = (MemberDto) authentication.getPrincipal();
-        Map<String, Object> claims = memberDto.getClaims();
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+                                        Authentication authentication) throws IOException, ServletException {
 
-        String accessToken = JWTUtil.generateToken(claims, 10);
-        String refreshToken = JWTUtil.generateToken(claims, 60*24);
+        log.info("-------------------------------------");
+        log.info(authentication);
+        log.info("-------------------------------------");
+
+        MemberDto memberDTO = (MemberDto)authentication.getPrincipal();
+
+        Map<String, Object> claims = memberDTO.getClaims();
+
+        String accessToken = JWTUtil.generateToken(claims, 1);
+
+        String refreshToken = JWTUtil.generateToken(claims,60*24);
+        //String refreshToken = JWTUtil.generateToken(claims,10);
+
 
         claims.put("accessToken", accessToken);
         claims.put("refreshToken", refreshToken);
 
         Gson gson = new Gson();
+
         String jsonStr = gson.toJson(claims);
 
-        response.setContentType("application/json; charset=utf-8");
-
+        response.setContentType("application/json; charset=UTF-8");
         PrintWriter printWriter = response.getWriter();
         printWriter.println(jsonStr);
         printWriter.close();
+
     }
+
+
 }

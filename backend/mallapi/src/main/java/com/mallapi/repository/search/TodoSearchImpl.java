@@ -1,10 +1,11 @@
 package com.mallapi.repository.search;
 
+
 import com.mallapi.domain.QTodo;
 import com.mallapi.domain.Todo;
 import com.mallapi.dto.PageRequestDto;
+
 import com.querydsl.jpa.JPQLQuery;
-import com.querydsl.jpa.impl.JPAQuery;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
