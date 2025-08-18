@@ -11,6 +11,5 @@ export const loginPost = async (email:string, pw:string) => {
   const res = await axios.post(`http://localhost:8080/api/member/login`, form, header)
   //2초간 delay
   await new Promise(resolve => setTimeout(resolve, 2000));
-  return res.data
-
+  return res.data  
 }

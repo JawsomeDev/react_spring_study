@@ -1,8 +1,8 @@
 import { useActionState, useState, type MouseEvent } from "react";
 import useCustomMove from "../../hooks/useCustomMove";
-import axios from "axios";
 import PendingModal from "../common/pendingModal";
 import ResultModal from "../common/resultModal";
+import jwtAxios from "../../util/jwtUtil";
 
 
 interface ProductTaskResult {
@@ -26,10 +26,10 @@ const modifyDeleteAsyncAction = async(state: ProductTaskResult, formData: FormDa
 
     let res;
     if(actionType === 'modify'){
-        res = await axios.put(`http://localhost:8080/api/products/${pno}`, formData)
+        res = await jwtAxios.put(`http://localhost:8080/api/products/${pno}`, formData)
     }
     else if(actionType === 'delete'){
-        res = await axios.delete(`http://localhost:8080/api/products/${pno}`)
+        res = await jwtAxios.delete(`http://localhost:8080/api/products/${pno}`)
     }
     return {actionType: actionType, result: res?.data?.RESULT}
 }
